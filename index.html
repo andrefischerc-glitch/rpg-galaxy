@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compêndio do Sistema</title>
+
+<!-- Fontes -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+<!-- Markdown parser -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<style>
+  :root {
+    --bg-deep: #0e0a06;
+    --bg-paper: #1a1410;
+    --bg-paper-light: #221a14;
+    --ink: #e8d9b8;
+    --ink-soft: #b8a883;
+    --gold: #c9a44c;
+    --gold-bright: #e6c267;
+    --gold-deep: #8a6d2a;
+    --crimson: #8b1a1a;
+    --crimson-deep: #5a0e0e;
+    --rule: #4a3a22;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg-deep);
+    background-image:
+      radial-gradient(ellipse at top, rgba(201, 164, 76, 0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at bottom, rgba(139, 26, 26, 0.06) 0%, transparent 70%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.05 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+    color: var(--ink);
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    text-align: center;
+    padding: 60px 20px 20px;
+    position: relative;
+  }
+
+  .crest {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--bg-paper-light) 0%, var(--bg-deep) 100%);
+    box-shadow: 0 0 30px rgba(201, 164, 76, 0.3), inset 0 0 20px rgba(0,0,0,0.6);
+    position: relative;
+  }
+
+  .crest::before, .crest::after {
+    content: '';
+    position: absolute;
+    width: 110px; height: 110px;
+    border: 1px solid var(--gold-deep);
+    border-radius: 50%;
+    opacity: 0.4;
+  }
+  .crest::after { width: 140px; height: 140px; opacity: 0.2; }
+
+  .crest svg { width: 50px; height: 50px; fill: var(--gold-bright); }
+
+  h1.title {
+    font-family: 'Cinzel Decorative', serif;
+    font-weight: 900;
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    color: var(--gold-bright);
+    letter-spacing: 0.08em;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8), 0 0 20px rgba(201,164,76,0.2);
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+  }
+
+  .ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin: 20px auto;
+    max-width: 400px;
+    color: var(--gold-deep);
+  }
+  .ornament .line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold-deep), transparent);
+  }
+  .ornament .diamond {
+    width: 8px; height: 8px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    box-shadow: 0 0 8px var(--gold);
+  }
+
+  /* NAVIGATION TABS */
+  nav.main-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    padding: 0 20px;
+    margin-bottom: 30px;
+  }
+
+  .tab-btn {
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    background: linear-gradient(180deg, var(--bg-paper-light) 0%, var(--bg-paper) 100%);
+    color: var(--ink-soft);
+    border: 1px solid var(--rule);
+    padding: 14px 28px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    overflow: hidden;
+  }
+
+  .tab-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(201,164,76,0.15) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .tab-btn:hover {
+    color: var(--gold-bright);
+    border-color: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(201,164,76,0.2);
+  }
+
+  .tab-btn:hover::before { opacity: 1; }
+
+  .tab-btn.active {
+    color: var(--bg-deep);
+    background: linear-gradient(180deg, var(--gold-bright) 0%, var(--gold-deep) 100%);
+    border-color: var(--gold-bright);
+    box-shadow: 0 0 20px rgba(201,164,76,0.4), inset 0 1px 0 rgba(255,255,255,0.3);
+  }
+
+  .tab-btn.active::before { display: none; }
+
+  /* SUB NAV (for spell schools) */
+  .sub-nav {
+    display: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 20px;
+    margin-bottom: 30px;
+    animation: fadeDown 0.5s ease;
+  }
+
+  .sub-nav.visible { display: flex; }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .sub-tab-btn {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 1rem;
+    background: transparent;
+    color: var(--ink-soft);
+    border: 1px solid transparent;
+    padding: 8px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.05em;
+  }
+
+  .sub-tab-btn:hover {
+    color: var(--gold-bright);
+    border-color: var(--rule);
+  }
+
+  .sub-tab-btn.active {
+    color: var(--gold-bright);
+    border-color: var(--gold);
+    background: rgba(201,164,76,0.08);
+  }
+
+  /* MAIN CONTENT (the grimoire pages) */
+  main {
+    max-width: 900px;
+    margin: 0 auto 80px;
+    padding: 0 20px;
+  }
+
+  .page {
+    background:
+      linear-gradient(180deg, rgba(26,20,16,0.98) 0%, rgba(20,14,10,0.98) 100%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 0.85 0 0 0 0 0.7 0 0 0 0 0.4 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23p)'/%3E%3C/svg%3E");
+    border: 1px solid var(--rule);
+    box-shadow:
+      0 20px 60px rgba(0,0,0,0.6),
+      0 0 0 1px rgba(201,164,76,0.1),
+      inset 0 0 60px rgba(0,0,0,0.4);
+    padding: 60px 50px;
+    position: relative;
+    min-height: 400px;
+    animation: pageReveal 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  /* Decorative corners */
+  .page::before, .page::after,
+  .corner-tl, .corner-tr, .corner-bl, .corner-br {
+    content: '';
+    position: absolute;
+    width: 30px; height: 30px;
+    border: 1px solid var(--gold-deep);
+    pointer-events: none;
+  }
+  .corner-tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+  .corner-tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+  .corner-bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+  .corner-br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+  .page::before, .page::after { display: none; }
+
+  @keyframes pageReveal {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Markdown rendering inside .content */
+  .content h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 2.4rem;
+    color: var(--gold-bright);
+    text-align: center;
+    margin: 30px 0 8px;
+    letter-spacing: 0.08em;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  }
+
+  .content h1:first-child { margin-top: 0; }
+
+  .content h1 + p,
+  .content h1 + blockquote {
+    text-align: center;
+  }
+
+  .content h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.6rem;
+    color: var(--gold);
+    margin: 40px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--rule);
+    letter-spacing: 0.05em;
+    position: relative;
+  }
+
+  .content h2::before {
+    content: '✦';
+    color: var(--gold-deep);
+    margin-right: 12px;
+    font-size: 0.8em;
+  }
+
+  .content h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.2rem;
+    color: var(--gold-bright);
+    margin: 24px 0 8px;
+    font-style: normal;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+
+  .content h3::before {
+    content: '› ';
+    color: var(--gold-deep);
+  }
+
+  .content p {
+    margin-bottom: 14px;
+    color: var(--ink);
+    text-align: justify;
+    hyphens: auto;
+  }
+
+  .content strong {
+    color: var(--gold-bright);
+    font-weight: 600;
+  }
+
+  .content em {
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+
+  .content ul, .content ol {
+    margin: 12px 0 18px 24px;
+    color: var(--ink);
+  }
+
+  .content li {
+    margin-bottom: 6px;
+    padding-left: 6px;
+  }
+
+  .content ul li::marker { color: var(--gold); content: '◈ '; }
+  .content ol li::marker { color: var(--gold); }
+
+  .content blockquote {
+    border-left: 3px solid var(--gold);
+    background: rgba(201,164,76,0.05);
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-style: italic;
+    color: var(--ink-soft);
+    position: relative;
+  }
+
+  .content blockquote::before {
+    content: '"';
+    position: absolute;
+    left: 8px; top: -10px;
+    font-size: 2.5rem;
+    color: var(--gold-deep);
+    font-family: 'Cinzel Decorative', serif;
+  }
+
+  .content hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold-deep), transparent);
+    margin: 40px 0;
+    position: relative;
+  }
+
+  .content hr::after {
+    content: '✦';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-paper);
+    padding: 0 12px;
+    color: var(--gold-deep);
+  }
+
+  .content code {
+    font-family: 'Courier New', monospace;
+    background: rgba(201,164,76,0.1);
+    color: var(--gold-bright);
+    padding: 2px 6px;
+    border: 1px solid var(--rule);
+    font-size: 0.9em;
+  }
+
+  /* Loading & welcome states */
+  .welcome {
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  .welcome p {
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 1.1rem;
+    max-width: 500px;
+    margin: 16px auto;
+  }
+
+  .loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .loading::after {
+    content: '...';
+    animation: dots 1.5s steps(4, end) infinite;
+  }
+
+  @keyframes dots {
+    0%, 20% { content: ''; }
+    40% { content: '.'; }
+    60% { content: '..'; }
+    80%, 100% { content: '...'; }
+  }
+
+  .error {
+    text-align: center;
+    padding: 40px;
+    color: #d97777;
+    font-style: italic;
+    border: 1px dashed var(--crimson);
+    background: rgba(139,26,26,0.1);
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 30px 20px 50px;
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+    font-style: italic;
+    letter-spacing: 0.1em;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    body { font-size: 16px; }
+    .page { padding: 40px 24px; }
+    .tab-btn { padding: 10px 16px; font-size: 0.8rem; letter-spacing: 0.08em; }
+    .content h1 { font-size: 1.8rem; }
+    .content h2 { font-size: 1.3rem; }
+    h1.title { font-size: 2rem; }
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg-deep); }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--gold-deep), var(--rule));
+    border: 1px solid var(--bg-deep);
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="crest">
+    <svg viewBox="0 0 24 24"><path d="M12 2L4 7v6c0 5 3.5 9.5 8 11 4.5-1.5 8-6 8-11V7l-8-5zm0 2.3l6 3.7v5c0 4-2.7 7.7-6 9-3.3-1.3-6-5-6-9V8l6-3.7zM12 7l-3 5h2v4h2v-4h2l-3-5z"/></svg>
+  </div>
+  <h1 class="title">Compêndio</h1>
+  <div class="subtitle">Grimório do Sistema</div>
+  <div class="ornament">
+    <span class="line"></span>
+    <span class="diamond"></span>
+    <span class="line"></span>
+  </div>
+</header>
+
+<nav class="main-nav" id="mainNav">
+  <button class="tab-btn active" data-tab="personagens" data-file="personagens_e_sistema.md">Personagens & Sistema</button>
+  <button class="tab-btn" data-tab="pericias" data-file="pericias.md">Perícias</button>
+  <button class="tab-btn" data-tab="magias">Magias</button>
+</nav>
+
+<nav class="sub-nav" id="subNav">
+  <button class="sub-tab-btn active" data-file="magias_mago.md">Mago</button>
+  <button class="sub-tab-btn" data-file="magias_feiticeiro.md">Feiticeiro</button>
+  <button class="sub-tab-btn" data-file="magias_bruxo.md">Bruxo</button>
+</nav>
+
+<main>
+  <article class="page" id="page">
+    <span class="corner-tl"></span>
+    <span class="corner-tr"></span>
+    <span class="corner-bl"></span>
+    <span class="corner-br"></span>
+    <div class="content" id="content">
+      <div class="welcome">
+        <p>Bem-vindo ao compêndio.</p>
+        <p>Selecione uma seção acima para começar a folhear o grimório.</p>
+      </div>
+    </div>
+  </article>
+</main>
+
+<footer>
+  ✦ Forjado em tinta e pergaminho ✦
+</footer>
+
+<script>
+  const mainNav = document.getElementById('mainNav');
+  const subNav = document.getElementById('subNav');
+  const content = document.getElementById('content');
+  const page = document.getElementById('page');
+
+  // Configurar marked.js
+  marked.setOptions({
+    breaks: false,
+    gfm: true
+  });
+
+  async function loadMarkdown(filename) {
+    content.innerHTML = '<div class="loading">Folheando o pergaminho</div>';
+
+    // Re-trigger animation
+    page.style.animation = 'none';
+    void page.offsetWidth;
+    page.style.animation = '';
+
+    try {
+      const response = await fetch(filename);
+      if (!response.ok) throw new Error(`Não foi possível carregar ${filename} (status ${response.status})`);
+      const md = await response.text();
+      const html = marked.parse(md);
+      content.innerHTML = html;
+
+      // Scroll suave até o topo do conteúdo
+      page.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (err) {
+      content.innerHTML = `
+        <div class="error">
+          <strong>Pergaminho ilegível.</strong><br>
+          ${err.message}<br>
+          <small>Verifique se o arquivo está na mesma pasta deste HTML e se você está usando um servidor (como Live Server).</small>
+        </div>`;
+    }
+  }
+
+  // Botões principais
+  mainNav.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      mainNav.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const tab = btn.dataset.tab;
+
+      if (tab === 'magias') {
+        // Mostrar sub-nav e carregar a sub-aba ativa
+        subNav.classList.add('visible');
+        const activeSub = subNav.querySelector('.sub-tab-btn.active');
+        loadMarkdown(activeSub.dataset.file);
+      } else {
+        subNav.classList.remove('visible');
+        loadMarkdown(btn.dataset.file);
+      }
+    });
+  });
+
+  // Botões de sub-navegação (escolas de magia)
+  subNav.querySelectorAll('.sub-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      subNav.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      loadMarkdown(btn.dataset.file);
+    });
+  });
+
+  // Carregar a primeira aba automaticamente
+  loadMarkdown('personagens_e_sistema.md');
+</script>
+
+</body>
+</html>
